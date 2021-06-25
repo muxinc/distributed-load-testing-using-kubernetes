@@ -22,21 +22,11 @@ from locust import HttpLocust, TaskSet, task
 
 
 class MetricsTaskSet(TaskSet):
-    _deviceid = None
-
-    def on_start(self):
-        self._deviceid = str(uuid.uuid4())
 
     @task(1)
-    def login(self):
-        self.client.post(
-            '/login', {"deviceid": self._deviceid})
-
-    @task(999)
-    def post_metrics(self):
-        self.client.post(
-            "/metrics", {"deviceid": self._deviceid, "timestamp": datetime.now()})
-
+    def get_counts(self):
+        token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJ2aWQiOiIxMjM0NSIsImtpZCI6IkI0c1ZsdDNHMDFxOXdkblJaOXgwMWdjSUJXMDBGdVZRZXUzIn0.VGZX9p2LOUSVB-WCHXFz4S1oB-c_5_R3JkLrjUt3ZgMct-9fFEz82ro6yL7LJOho9cNAqKw-tA7bdmF-Cb6HH3cp-nS6XwR09Fvahv1aacRI4s21y6sgkpKS2WrMn5R0rjhHHXodHIdYTTrJ7nw9k7t1HVoc3K4jImy1XGXpOS9s8DTsCLHXhRhy8us0rYuNuOmncv7sNnigtV-8Tvw_Alt1V42-IsbtoOw8lxr2KSf-pw4zgufGubdYSpt4lRoOj2nBZYIJcFJptrj9uWoI6rTCk-VCU-sp2BGZ6MIMX2FuBglgQVuZMlgA8i1V457nZf9DkP9hLb9cIrfS85OyQg'
+        self.client.get("/counts?token={0}".format(token))
 
 class MetricsLocust(HttpLocust):
     task_set = MetricsTaskSet
