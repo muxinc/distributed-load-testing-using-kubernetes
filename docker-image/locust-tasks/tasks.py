@@ -123,10 +123,14 @@ tokens = [
 
 class MetricsTaskSet(TaskSet):
 
+    # @task(1)
+    # def get_counts(self):
+    #     token = random.choice (tokens)
+    #     self.client.get("/counts?token={0}".format(token))
+
     @task(1)
-    def get_counts(self):
-        token = random.choice (tokens)
-        self.client.get("/counts?token={0}".format(token))
+    def get_service_unavailable(self):
+        self.client.get("/foo")
 
 class MetricsLocust(HttpLocust):
     task_set = MetricsTaskSet
